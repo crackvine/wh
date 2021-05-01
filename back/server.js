@@ -1,9 +1,9 @@
 require('dotenv').config();
 
 const config = require('./config');
-const getLogger = require('./logger');
-const getDb = require('./db');
-const api = require('./api');
+const getLogger = require('./src/logger');
+const getDb = require('./src/db');
+const api = require('./src/api');
 
 const start = async () => {
   const logger = getLogger(config);

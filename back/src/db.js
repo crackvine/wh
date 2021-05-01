@@ -13,6 +13,7 @@ const db = async ({ config, logger }) => {
     logger.info('connected to database');
   } catch (error) {
     logger.error(error.stack);
+    throw new Error('failed to connect to database');
   }
 
   const health = async () => {
