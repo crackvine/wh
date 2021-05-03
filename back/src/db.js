@@ -51,7 +51,7 @@ const db = async ({ config, logger }) => {
   };
 
   const getProductById = async (id) => {
-    logger.debug('db:getProductById called');
+    logger.debug(`db:getProductById called with id ${id}`);
     try {
       const results = await client.query(
         `SELECT id, name, stock
@@ -99,6 +99,49 @@ const db = async ({ config, logger }) => {
     }
   };
 
+  const sellProductById = async (id) => {
+    logger.debug(`db:sellProductById called with id ${id}`);
+    try {
+      await client.query('BEGIN');
+      await client.query('LOCK TABLE inventory IN ACCESS EXCLUSIVE MODE');
+
+      const inStockResult = await client.query(
+        'SELECT COUNT(*) AS in_stock FROM products_stock WHERE product_id=$1 AND stock > 0', [id],
+      );
+      logger.debug(`Product ${id} in stock? :`);
+      logger.debug(!!+inStockResult.rows[0].in_stock);
+      if (!+inStockResult.rows[0].in_stock) {
+        throw new Error('Product is not in stock');
+      }
+
+      const articlesResult = await client.query(
+        'SELECT article_id, article_count FROM products_x_articles WHERE product_id=$1', [id],
+      );
+      logger.debug(`Article for product ${id}:`);
+      logger.debug(articlesResult.rows);
+
+      const dbOps = articlesResult.rows.map((article) => client.query(
+        'UPDATE inventory SET stock = stock-$1 WHERE id=$2 RETURNING id, stock',
+        [article.article_count, article.article_id],
+      ));
+      const resultsOps = await Promise.all(dbOps);
+      logger.debug(`Articles count after product ${id} sale:`);
+      logger.debug(resultsOps.rows);
+
+      await client.query('COMMIT');
+    } catch (error) {
+      try {
+        await client.query('ROLLBACK');
+      } catch (rollbackError) {
+        logger.error(rollbackError.stack);
+        return { status: 'rollback error', details: error.message };
+      }
+      logger.error(error.stack);
+      return { status: 'error', details: error.message };
+    }
+    return true;
+  };
+
   const upsertArticles = async (articles) => {
     logger.debug('db:upsertArticles called with: ');
     logger.debug(articles);
@@ -134,7 +177,7 @@ const db = async ({ config, logger }) => {
   };
 
   const getArticleById = async (id) => {
-    logger.debug('db:getArticleById called');
+    logger.debug(`db:getArticleById called with id ${id}`);
     try {
       const results = await client.query('SELECT * FROM inventory WHERE id=$1', [id]);
       logger.debug('db:getArticleById results:');
@@ -154,6 +197,7 @@ const db = async ({ config, logger }) => {
     getProducts,
     getProductById,
     upsertProducts,
+    sellProductById,
   };
 };
 

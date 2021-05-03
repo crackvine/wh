@@ -49,6 +49,18 @@ const api = ({ config, logger, db }) => {
     const { id } = req.params;
     try {
       const results = await db.getProductById(id);
+      res.status(results.length ? 200 : 404).send(results);
+    } catch (error) {
+      logger.error(error);
+      res.status(500).send(error);
+    }
+  });
+
+  app.patch('/products/:id/sale', async (req, res) => {
+    const { id } = req.params;
+    // TODO check in stock
+    try {
+      const results = await db.sellProductById(id);
       res.send(results);
     } catch (error) {
       logger.error(error);
@@ -82,7 +94,7 @@ const api = ({ config, logger, db }) => {
     const { id } = req.params;
     try {
       const results = await db.getArticleById(id);
-      res.send(results);
+      res.status(results.length ? 200 : 404).send(results);
     } catch (error) {
       logger.error(error);
       res.status(500).send(error);
