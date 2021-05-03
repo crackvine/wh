@@ -8,11 +8,16 @@ const logger = require('../src/logger')(config);
 const runMigration = async (testsDatabase = false) => {
   logger.info(`connecting to postgres DB at ${config.POSTGRES_HOST}:${config.POSTGRES_PORT}...`);
 
-  const connectionData = {
+  const connectionData = testsDatabase ? {
     user: config.POSTGRES_USER,
     password: config.POSTGRES_PASS,
     host: config.POSTGRES_HOST,
     port: config.POSTGRES_PORT,
+  } : {
+    user: 'postgres',
+    password: 'postgres',
+    host: 'localhost',
+    port: 5432,
   };
 
   let client;
@@ -27,8 +32,10 @@ const runMigration = async (testsDatabase = false) => {
 
   const databaseName = testsDatabase ? 'warehouse_test' : config.DATABASE_NAME;
   try {
-    const createDbResult = await client.query(`CREATE DATABASE ${databaseName}`);
-    logger.debug(createDbResult);
+    if (testsDatabase) {
+      await client.query(`DROP DATABASE IF EXISTS ${databaseName}`);
+    }
+    await client.query(`CREATE DATABASE ${databaseName}`);
     logger.info(`database ${config.DATABASE_NAME} created`);
   } catch (error) {
     logger.error(error);
@@ -62,4 +69,4 @@ const runMigration = async (testsDatabase = false) => {
   await client.end();
 };
 
-runMigration();
+runMigration(process.argv[2] === 'test');

@@ -1,0 +1,5 @@
+[
+  { "id": 1, "name": "Dining Chair", "stock": 1 },
+  { "id": 2, "name": "Dining Table", "stock": 2 },
+  { "id": 3, "name": "Many Screws Chair", "stock": 1 }
+]

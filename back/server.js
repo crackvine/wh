@@ -3,6 +3,7 @@ require('dotenv').config();
 const config = require('./config');
 const getLogger = require('./src/logger');
 const getDb = require('./src/db');
+const validator = require('./src/validator');
 const api = require('./src/api');
 
 const start = async () => {
@@ -11,7 +12,12 @@ const start = async () => {
   try {
     logger.debug('bringing up api...');
     const db = await getDb({ config, logger });
-    const app = api({ config, logger, db });
+    const app = api({
+      config,
+      logger,
+      db,
+      validator,
+    });
     app.listen(config.PORT, config.HOST);
     logger.info(`server listening on ${config.HOST}:${config.PORT}`);
   } catch (error) {

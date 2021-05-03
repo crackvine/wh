@@ -1,0 +1,6 @@
+[
+  { "id": 1, "name": "leg", "stock": 60 },
+  { "id": 2, "name": "screw", "stock": 100 },
+  { "id": 3, "name": "seat", "stock": 1 },
+  { "id": 4, "name": "table top", "stock": 2 }
+]

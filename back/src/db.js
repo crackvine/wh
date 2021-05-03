@@ -22,14 +22,15 @@ const db = async ({ config, logger }) => {
       const results = await client.query(
         `SELECT id, name, stock
           FROM products
-          LEFT JOIN products_stock ON products.id = products_stock.product_id`,
+          LEFT JOIN products_stock ON products.id = products_stock.product_id
+          ORDER BY products.id ASC`,
       );
       logger.debug('db:getProducts results:');
       logger.debug(results.rows);
       return results.rows;
     } catch (error) {
       logger.error(error.stack);
-      return { status: 'error', details: error.message };
+      throw new Error(`error recovering products: ${error.message}`);
     }
   };
 
@@ -48,7 +49,7 @@ const db = async ({ config, logger }) => {
       return results.rows;
     } catch (error) {
       logger.error(error.stack);
-      return { status: 'error', details: error.message };
+      throw new Error(`error recovering product: ${error.message}`);
     }
   };
 
@@ -78,7 +79,7 @@ const db = async ({ config, logger }) => {
       return resultsOps1.map((res) => res?.rows);
     } catch (error) {
       logger.error(error);
-      return { status: 'error', details: error.message };
+      throw new Error(`error adding products: ${error.message}`);
     }
   };
 
@@ -117,10 +118,10 @@ const db = async ({ config, logger }) => {
         await client.query('ROLLBACK');
       } catch (rollbackError) {
         logger.error(rollbackError.stack);
-        return { status: 'rollback error', details: error.message };
+        throw new Error(`rollback error selling product: ${error.message}`);
       }
       logger.error(error.stack);
-      return { status: 'error', details: error.message };
+      throw new Error(`error selling product: ${error.message}`);
     }
     return true;
   };
@@ -142,20 +143,20 @@ const db = async ({ config, logger }) => {
       return results.map((res) => res?.rows);
     } catch (error) {
       logger.error(error.stack);
-      return { status: 'error', details: error.message };
+      throw new Error(`error adding articles: ${error.message}`);
     }
   };
 
   const getArticles = async () => {
     logger.debug('db:getArticles called');
     try {
-      const results = await client.query('SELECT * FROM inventory');
+      const results = await client.query('SELECT * FROM inventory ORDER by id ASC');
       logger.debug('db:getArticles results:');
       logger.debug(results.rows);
       return results.rows;
     } catch (error) {
       logger.error(error.stack);
-      return { status: 'error', details: error.message };
+      throw new Error(`error recovering articles: ${error.message}`);
     }
   };
 
@@ -168,8 +169,13 @@ const db = async ({ config, logger }) => {
       return results.rows;
     } catch (error) {
       logger.error(error.stack);
-      return { status: 'error', details: error.message };
+      throw new Error(`error recovering article: ${error.message}`);
     }
+  };
+
+  const endConnection = async () => {
+    logger.debug('db:releaseConnection called');
+    await client.end();
   };
 
   return {
@@ -180,6 +186,7 @@ const db = async ({ config, logger }) => {
     getProductById,
     upsertProducts,
     sellProductById,
+    endConnection,
   };
 };
 

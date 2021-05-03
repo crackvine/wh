@@ -2,9 +2,12 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 
-// TODO: include validation for post endpoints incoming JSON files
-
-const api = ({ config, logger, db }) => {
+const api = ({
+  config,
+  logger,
+  db,
+  validator,
+}) => {
   const app = express();
 
   app.use(helmet());
@@ -21,12 +24,17 @@ const api = ({ config, logger, db }) => {
   app.post('/products', async (req, res) => {
     logger.debug('incoming products: ');
     logger.debug(req.body);
-    try {
-      const results = await db.upsertProducts(req.body.products);
-      res.send(results);
-    } catch (error) {
-      logger.error(error);
-      res.status(500).send(error);
+
+    if (validator.validateProducts(req.body)) {
+      try {
+        const results = await db.upsertProducts(req.body.products);
+        res.send(results);
+      } catch (error) {
+        logger.error(error);
+        res.status(500).send(error);
+      }
+    } else {
+      res.status(400).end(`products json failed validation: ${JSON.stringify(validator.validateProducts.errors)}`);
     }
   });
 
@@ -53,7 +61,6 @@ const api = ({ config, logger, db }) => {
 
   app.patch('/products/:id/sale', async (req, res) => {
     const { id } = req.params;
-    // TODO check in stock
     try {
       const results = await db.sellProductById(id);
       res.send(results);
@@ -66,12 +73,17 @@ const api = ({ config, logger, db }) => {
   app.post('/articles', async (req, res) => {
     logger.debug('incoming articles: ');
     logger.debug(req.body);
-    try {
-      const results = await db.upsertArticles(req.body.inventory);
-      res.send(results);
-    } catch (error) {
-      logger.error(error);
-      res.status(500).send(error);
+
+    if (validator.validateInventory(req.body)) {
+      try {
+        const results = await db.upsertArticles(req.body.inventory);
+        res.send(results);
+      } catch (error) {
+        logger.error(error);
+        res.status(500).send(error);
+      }
+    } else {
+      res.status(400).end(`inventory json failed validation: ${JSON.stringify(validator.validateInventory.errors)}`);
     }
   });
 
@@ -97,8 +109,6 @@ const api = ({ config, logger, db }) => {
   });
 
   return app;
-  // app.listen(config.PORT, config.HOST);
-  // logger.info(`server listening on ${config.HOST}:${config.PORT}`);
 };
 
 module.exports = api;
