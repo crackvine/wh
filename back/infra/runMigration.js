@@ -1,6 +1,6 @@
 const { Client } = require('pg');
 const config = require('../config');
-const logger = require('../logger')(config);
+const logger = require('../src/logger')(config);
 
 const runMigration = async () => {
   logger.info(`connecting to postgres DB at ${config.POSTGRES_HOST}:${config.POSTGRES_PORT}...`);
@@ -30,6 +30,8 @@ const runMigration = async () => {
   } catch (error) {
     logger.error(error);
   }
+
+  // TODO: include tables migrations
 
   await client.end();
 };
