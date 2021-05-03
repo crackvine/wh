@@ -1,26 +1,21 @@
 const express = require('express');
+const cors = require('cors');
 const helmet = require('helmet');
 
-// TODO: include validation for post endpoints incoming jsons
+// TODO: include validation for post endpoints incoming JSON files
 
 const api = ({ config, logger, db }) => {
   const app = express();
+
   app.use(helmet());
   app.use(express.json());
 
-  app.get('/', (req, res) => {
-    res.send('Hello World');
-  });
+  app.use(cors({
+    origin: config.CORS_ALLOWED_SOURCE,
+  }));
 
-  app.get('/status', async (req, res) => {
-    try {
-      const dbStatus = await db.health();
-      // TODO: include os.freemem and os.loadavg
-      res.send(dbStatus);
-    } catch (error) {
-      logger.error(error);
-      res.status(500).send(error);
-    }
+  app.get('/', (req, res) => {
+    res.send('Hello');
   });
 
   app.post('/products', async (req, res) => {
@@ -101,8 +96,9 @@ const api = ({ config, logger, db }) => {
     }
   });
 
-  app.listen(config.PORT, config.HOST);
-  logger.info(`server listening on ${config.HOST}:${config.PORT}`);
+  return app;
+  // app.listen(config.PORT, config.HOST);
+  // logger.info(`server listening on ${config.HOST}:${config.PORT}`);
 };
 
 module.exports = api;

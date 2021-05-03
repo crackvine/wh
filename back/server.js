@@ -11,7 +11,9 @@ const start = async () => {
   try {
     logger.debug('bringing up api...');
     const db = await getDb({ config, logger });
-    api({ config, logger, db });
+    const app = api({ config, logger, db });
+    app.listen(config.PORT, config.HOST);
+    logger.info(`server listening on ${config.HOST}:${config.PORT}`);
   } catch (error) {
     logger.error(error);
   }

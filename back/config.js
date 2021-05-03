@@ -9,4 +9,5 @@ module.exports = {
   PRODUCTS_TABLE_NAME: process.env.PRODUCTS_TABLE_NAME || 'products',
   INVENTORY_TABLE_NAME: process.env.INVENTORY_TABLE_NAME || 'inventory',
   DEBUG: true,
+  CORS_ALLOWED_SOURCE: process.env.CORS_ALLOWED_SOURCE || 'http://localhost:3000',
 };

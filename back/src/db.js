@@ -16,23 +16,6 @@ const db = async ({ config, logger }) => {
     throw new Error('failed to connect to database');
   }
 
-  const health = async () => {
-    try {
-      logger.debug('db:health called');
-      const timeResult = await client.query('SELECT NOW() as now');
-      const tablesResult = await client.query(`SELECT *
-        FROM pg_catalog.pg_tables
-        WHERE schemaname != 'pg_catalog' AND schemaname != 'information_schema';`);
-      logger.debug(`db:health results: ${JSON.stringify([timeResult, tablesResult])}`);
-      return {
-        status: 'ok', time: timeResult.rows[0].now, tables: tablesResult.rows.map((row) => row),
-      };
-    } catch (error) {
-      logger.error(error.stack);
-      return { status: 'error', details: error.message };
-    }
-  };
-
   const getProducts = async () => {
     logger.debug('db:getProducts called');
     try {
@@ -190,7 +173,6 @@ const db = async ({ config, logger }) => {
   };
 
   return {
-    health,
     upsertArticles,
     getArticles,
     getArticleById,
