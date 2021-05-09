@@ -6,17 +6,23 @@ import readFile from '../lib/readFile';
 const ProvisionItemsForm = ({ handleProvision }) => {
   const [targetFile, setTargetFile] = useState();
   const [isSelected, setIsSelected] = useState(false);
+  const [parseError, setParseError] = useState(false);
 
   const handleOnChange = (event) => {
-    setTargetFile(event.target.files[0]);
+    setParseError(false);
     setIsSelected(true);
+    setTargetFile(event.target.files[0]);
   };
 
   const handleOnSubmit = async (event) => {
     event.preventDefault();
     const fileContents = await readFile(targetFile);
-    const payload = JSON.parse(fileContents);
-    handleProvision(payload);
+    try {
+      const payload = JSON.parse(fileContents);
+      handleProvision(payload);
+    } catch (error) {
+      setParseError(true);
+    }
   };
 
   return (
@@ -24,6 +30,7 @@ const ProvisionItemsForm = ({ handleProvision }) => {
       <h3>PROVISIONING</h3>
       <input type="file" name="file" onChange={handleOnChange} />
       <button type="submit" disabled={!isSelected}>Submit</button>
+      { parseError && <div>failed does not seem to be valid JSON format</div> }
     </form>
   );
 };
