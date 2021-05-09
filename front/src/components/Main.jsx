@@ -10,7 +10,6 @@ import ProvisionItemsForm from './ProvisionItemsForm';
 const Main = () => {
   const [articles, setArticles] = useState([]);
   const [products, setProducts] = useState([]);
-  const [provisioned, setProvisioned] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const getItems = async () => {
@@ -34,40 +33,42 @@ const Main = () => {
   };
 
   const handleProvision = async (payload) => {
-    setIsLoading(true);
-
     if (payload[config.payloadInventoryField]) { // payload contains articles
       const result = await warehouseService.provisionInventory(payload);
 
       if (result.success) {
         alert('articles provisioned!');
-        setProvisioned(result);
       } else {
-        alert(`failed to provision articles: ${result.error}`);
+        alert(result.error);
       }
     } else if (payload[config.payloadProductsField]) { // payload contains products
       const result = await warehouseService.provisionProducts(payload);
 
       if (result.success) {
         alert('products provisioned!');
-        setProvisioned(result);
       } else {
-        alert(`failed to provision products: ${result.error}`);
+        alert(result.error);
       }
     } else {
       alert('could not identify type of data contained in the file');
     }
-
-    setIsLoading(false);
+    getItems();
   };
 
-  const onSellOne = (id) => {
-    console.log('sell one of product ID ', id);
+  const onSellOne = async (id) => {
+    const result = await warehouseService.sellProduct(id);
+    if (result.success) {
+      alert(`one of product ${id} sold`);
+    } else {
+      alert(result.error);
+    }
+    getItems();
   };
 
   useEffect(() => {
+    console.log('fetching');
     getItems();
-  }, [provisioned]);
+  }, []);
 
   return (
     isLoading
