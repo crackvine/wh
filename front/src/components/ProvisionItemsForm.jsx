@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import readFile from '../lib/readFile';
+import readFileAsText from '../lib/readFileAsText';
 
 const ProvisionItemsForm = ({ handleProvision }) => {
   const [targetFile, setTargetFile] = useState();
@@ -16,7 +16,7 @@ const ProvisionItemsForm = ({ handleProvision }) => {
 
   const handleOnSubmit = async (event) => {
     event.preventDefault();
-    const fileContents = await readFile(targetFile);
+    const fileContents = await readFileAsText(targetFile);
     try {
       const payload = JSON.parse(fileContents);
       handleProvision(payload);
@@ -30,7 +30,7 @@ const ProvisionItemsForm = ({ handleProvision }) => {
       <h3>PROVISIONING</h3>
       <input type="file" name="file" onChange={handleOnChange} />
       <button type="submit" disabled={!isSelected}>Submit</button>
-      { parseError && <div>failed does not seem to be valid JSON format</div> }
+      { parseError && <div>file does not seem to be valid JSON format</div> }
     </form>
   );
 };

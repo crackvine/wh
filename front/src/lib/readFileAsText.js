@@ -1,4 +1,4 @@
-const readFile = (target, encoding = 'utf8') => (
+const readFileAsText = (target, encoding = 'utf8') => (
   new Promise((resolve, reject) => {
     const reader = new FileReader();
 
@@ -14,4 +14,4 @@ const readFile = (target, encoding = 'utf8') => (
   })
 );
 
-export default readFile;
+export default readFileAsText;
