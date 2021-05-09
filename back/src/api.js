@@ -31,7 +31,7 @@ const api = ({
         res.send(results);
       } catch (error) {
         logger.error(error);
-        res.status(500).send(error);
+        res.status(500).send(error.message);
       }
     } else {
       res.status(400).end(`products json failed validation: ${JSON.stringify(validator.validateProducts.errors)}`);
@@ -44,7 +44,7 @@ const api = ({
       res.send(results);
     } catch (error) {
       logger.error(error);
-      res.status(500).send(error);
+      res.status(500).send(error.message);
     }
   });
 
@@ -55,7 +55,7 @@ const api = ({
       res.status(results.length ? 200 : 404).send(results);
     } catch (error) {
       logger.error(error);
-      res.status(500).send(error);
+      res.status(500).send(error.message);
     }
   });
 
@@ -66,7 +66,7 @@ const api = ({
       res.send(results);
     } catch (error) {
       logger.error(error);
-      res.status(500).send(error);
+      res.status(500).send(error.message);
     }
   });
 
@@ -80,7 +80,7 @@ const api = ({
         res.send(results);
       } catch (error) {
         logger.error(error);
-        res.status(500).send(error);
+        res.status(500).send(error.message);
       }
     } else {
       res.status(400).end(`inventory json failed validation: ${JSON.stringify(validator.validateInventory.errors)}`);
@@ -93,7 +93,7 @@ const api = ({
       res.send(results);
     } catch (error) {
       logger.error(error);
-      res.status(500).send(error);
+      res.status(500).send(error.message);
     }
   });
 
@@ -104,7 +104,7 @@ const api = ({
       res.status(results.length ? 200 : 404).send(results);
     } catch (error) {
       logger.error(error);
-      res.status(500).send(error);
+      res.status(500).send(error.message);
     }
   });
 
