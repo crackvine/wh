@@ -83,41 +83,33 @@ const Main = () => {
   }, []);
 
   return (
-    isLoading
-      ? (
-        <Container align="center" maxWidth="sm">
-          <CircularProgress color="secondary" />
-        </Container>
-      )
-      : (
-        <Container maxWidth="md">
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6} border={1}>
-              <ProductList products={products} handleSellOne={handleSellOne} />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Inventory articles={articles} />
-            </Grid>
-          </Grid>
-          <Divider />
-          <Grid container spacing={2}>
-            <Grid item md={12} style={{ marginBottom: '2em' }}>
-              <ProvisionItemsForm handleProvision={handleProvision} />
-            </Grid>
-          </Grid>
-          <Divider />
-          {
-            notification.show
-              && (
-                <Alert
-                  severity={notification.severity}
-                  onClose={() => { setNotification({ show: false, severity: 'info', message: null }); }}
-                >{ notification.message }
-                </Alert>
-              )
-          }
-        </Container>
-      )
+    <Container maxWidth="md">
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={6} border={1}>
+          <ProductList products={products} handleSellOne={handleSellOne} />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Inventory articles={articles} />
+        </Grid>
+      </Grid>
+      <Divider />
+      <Grid container spacing={2}>
+        <Grid item md={12} style={{ marginBottom: '2em' }}>
+          <ProvisionItemsForm handleProvision={handleProvision} />
+        </Grid>
+      </Grid>
+      <Divider />
+      {isLoading
+        ? <Container align="center" maxWidth="sm"><CircularProgress color="secondary" /></Container>
+        : notification.show
+            && (
+              <Alert
+                severity={notification.severity}
+                onClose={() => { setNotification({ show: false, severity: 'info', message: null }); }}
+              >{ notification.message }
+              </Alert>
+            )}
+    </Container>
   );
 };
 
