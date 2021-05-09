@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import warehouseService from '../services/warehouseService';
 
+import ProductList from './ProductList';
+import Inventory from './Inventory';
+
 const Main = () => {
   const [articles, setArticles] = useState([]);
   const [products, setProducts] = useState([]);
@@ -26,13 +29,8 @@ const Main = () => {
 
   return (
     <div>
-      <h1>MAIN</h1>
-      <ul>
-        { articles && articles.map((article) => <li>{article.name}</li>) }
-      </ul>
-      <ul>
-        { products && products.map((product) => <li>{product.name}</li>) }
-      </ul>
+      <ProductList products={products} />
+      <Inventory articles={articles} />
     </div>
   );
 };
