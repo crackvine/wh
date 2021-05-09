@@ -1,23 +1,16 @@
 import PropTypes from 'prop-types';
-
 import Product from './Product';
 
-const ProductList = ({ products }) => {
-  const onSale = (id) => {
-    console.log('sale for product of ID ', id);
-  };
-
-  return (
-    <ul>
-      <span>PRODUCT LIST</span>
-      {
-        products && products.length
-          ? products.map((product) => <Product key={product.id} product={product} onSale={onSale} />)
-          : <li>0 products</li>
-      }
-    </ul>
-  );
-};
+const ProductList = ({ products, onSellOne }) => (
+  <ul>
+    <span>PRODUCT LIST</span>
+    {
+      products && products.length
+        ? products.map((product) => <Product key={product.id} product={product} onSellOne={onSellOne} />)
+        : <li>0 products</li>
+    }
+  </ul>
+);
 
 ProductList.propTypes = {
   products: PropTypes.arrayOf(
@@ -27,6 +20,7 @@ ProductList.propTypes = {
       stock: PropTypes.number,
     }),
   ),
+  onSellOne: PropTypes.func.isRequired,
 };
 
 ProductList.defaultProps = {

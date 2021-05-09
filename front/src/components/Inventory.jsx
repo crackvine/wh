@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-
 import Article from './Article';
 
 const Inventory = ({ articles }) => (
