@@ -7,7 +7,7 @@ const getInventory = async () => {
     return { success: true, data: response.data };
   } catch (error) {
     console.log(`Failed to get article list : ${error.message}`);
-    return { success: false, error: error.message };
+    return { success: false, error: error?.response.data ?? error.message };
   }
 };
 
@@ -17,7 +17,7 @@ const getProductList = async () => {
     return { success: true, data: response.data };
   } catch (error) {
     console.log(`Failed to get article list : ${error.message}`);
-    return { success: false, error: error.message };
+    return { success: false, error: error?.response.data ?? error.message };
   }
 };
 
@@ -27,7 +27,7 @@ const provisionInventory = async (articles) => {
     return { success: true, data: response.data };
   } catch (error) {
     console.log(`Failed to provision inventory : ${error.message}`);
-    return { success: false, error: error.message };
+    return { success: false, error: error?.response.data ?? error.message };
   }
 };
 
@@ -37,7 +37,7 @@ const provisionProducts = async (products) => {
     return { success: true, data: response.data };
   } catch (error) {
     console.log(`Failed to get provision products : ${error.message}`);
-    return { success: false, error: error.message };
+    return { success: false, error: error?.response.data ?? error.message };
   }
 };
 
@@ -46,8 +46,8 @@ const sellProduct = async (id) => {
     const response = await axios.patch(`${config.API_BASE_URL}/products/${id}/sale`);
     return { success: true, data: response.data };
   } catch (error) {
-    console.log(`Failed to get provision products : ${error.message}`);
-    return { success: false, error: error.message };
+    console.log(`Failed to sell product : ${error.message}`);
+    return { success: false, error: error?.response.data ?? error.message };
   }
 };
 
