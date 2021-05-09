@@ -1,5 +1,12 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import {
+  Typography,
+  Input,
+  Button,
+  Box,
+} from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 
 import readFileAsText from '../lib/readFileAsText';
 
@@ -27,10 +34,12 @@ const ProvisionItemsForm = ({ handleProvision }) => {
 
   return (
     <form onSubmit={handleOnSubmit}>
-      <h3>PROVISIONING</h3>
-      <input type="file" name="file" onChange={handleOnChange} />
-      <button type="submit" disabled={!isSelected}>Submit</button>
-      { parseError && <div>file does not seem to be valid JSON format</div> }
+      <Typography variant="h6" align="center">PROVISIONING</Typography>
+      <Box align="center" mt={3}>
+        <Input type="file" name="file" onChange={handleOnChange} />
+        <Button variant="contained" color="primary" type="submit" disabled={!isSelected}>Submit</Button>
+      </Box>
+      { parseError && <Alert severity="error">file does not seem to be valid JSON format</Alert> }
     </form>
   );
 };

@@ -1,15 +1,19 @@
 import PropTypes from 'prop-types';
+import { Typography, List, ListItem } from '@material-ui/core';
+
 import Product from './Product';
 
-const ProductList = ({ products, onSellOne }) => (
-  <ul>
-    <span>PRODUCT LIST</span>
-    {
-      products && products.length
-        ? products.map((product) => <Product key={product.id} product={product} onSellOne={onSellOne} />)
-        : <li>0 products</li>
-    }
-  </ul>
+const ProductList = ({ products, handleSellOne }) => (
+  <>
+    <Typography variant="h6" align="center">PRODUCT LIST</Typography>
+    <List>
+      {
+        products && products.length
+          ? products.map((product) => <Product key={product.id} product={product} handleSellOne={handleSellOne} />)
+          : <ListItem>0 products</ListItem>
+      }
+    </List>
+  </>
 );
 
 ProductList.propTypes = {
@@ -20,7 +24,7 @@ ProductList.propTypes = {
       stock: PropTypes.number,
     }),
   ),
-  onSellOne: PropTypes.func.isRequired,
+  handleSellOne: PropTypes.func.isRequired,
 };
 
 ProductList.defaultProps = {

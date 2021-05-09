@@ -1,7 +1,9 @@
+import { Typography, AppBar } from '@material-ui/core';
+
 const Header = () => (
-  <div>
-    <h1>HEADER</h1>
-  </div>
+  <AppBar position="relative">
+    <Typography variant="h4" gutterBottom align="center">WAREHOUSE</Typography>
+  </AppBar>
 );
 
 export default Header;

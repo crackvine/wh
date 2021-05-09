@@ -1,8 +1,17 @@
 import PropTypes from 'prop-types';
+import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import { Build } from '@material-ui/icons';
 
-const Article = ({ article: { id, name, stock } }) => (
-  <li>[id:{id}] {name} - stock: {stock}</li>
-);
+const Article = ({ article: { id, name, stock } }) => {
+  const primaryText = `${name} - stock: ${stock}`;
+  const secondaryText = `id: ${id}`;
+  return (
+    <ListItem>
+      <ListItemIcon><Build /></ListItemIcon>
+      <ListItemText primary={primaryText} secondary={secondaryText} />
+    </ListItem>
+  );
+};
 
 Article.propTypes = {
   article: PropTypes.shape({

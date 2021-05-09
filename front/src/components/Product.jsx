@@ -1,13 +1,22 @@
 import PropTypes from 'prop-types';
+import {
+  Button, ListItem, ListItemIcon, ListItemText,
+} from '@material-ui/core';
+import { ShoppingCart } from '@material-ui/icons';
 
-const Product = ({ product: { id, name, stock }, onSellOne }) => (
-  <li className="my-5 border-gray-300">
-    [id:{id}] {name} - stock: {stock}
-    <button type="button" onClick={() => onSellOne(id)}>
-      sell one
-    </button>
-  </li>
-);
+const Product = ({ product: { id, name, stock }, handleSellOne }) => {
+  const primaryText = `${name} - stock: ${stock}`;
+  const secondaryText = `id: ${id}`;
+  return (
+    <ListItem>
+      <ListItemIcon><ShoppingCart /></ListItemIcon>
+      <ListItemText primary={primaryText} secondary={secondaryText} />
+      <Button variant="contained" color="primary" type="button" onClick={() => handleSellOne(id)}>
+        sell one
+      </Button>
+    </ListItem>
+  );
+};
 
 Product.propTypes = {
   product: PropTypes.shape({
@@ -15,7 +24,7 @@ Product.propTypes = {
     name: PropTypes.string,
     stock: PropTypes.number,
   }),
-  onSellOne: PropTypes.func.isRequired,
+  handleSellOne: PropTypes.func.isRequired,
 };
 
 Product.defaultProps = {
