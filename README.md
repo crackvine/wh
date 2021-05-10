@@ -1,6 +1,6 @@
 # wh
 
-The backend application uses node and express with and a postgres database for persistence. The application is coded in a functional style following dependency injection principles where possible.
+The backend application uses node and express with a postgres database for persistence. It is coded in a functional style following dependency injection principles where possible.
 
 The frontend is a simple react app using material-ui for styling.
 
@@ -64,7 +64,7 @@ Had there been more time available I would have:
 
 - Added endpoints for deletion of products and articles, and associated tests to ensure the constraints in the database are effective.
 
-- Modified to the sale endpoint to allow for sales of more than one item per request.
+- Modified the sale endpoint to allow for sales of more than one item per request.
 
 - Spent some time refactoring, e.g. separate the schema definitions into their own files.
 
@@ -79,3 +79,5 @@ Had there been more time available I would have:
 - Customised the styling to avoid the generic look and feel. Improved the styling for the case where many items are displayed.
 
 - Implemented a more sophisticated notification system using toasts for example.
+
+- Included the option of sell more than one of a particular product
